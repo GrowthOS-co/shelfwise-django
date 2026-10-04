@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load shelfwise %}
+
+{% block content %}
+<h1>Checkout</h1>
+
+<table>
+  <thead>
+    <tr><th>Book</th><th class="number">Quantity</th><th class="number">Price</th><th class="number">Amount</th></tr>
+  </thead>
+  <tbody>
+    {% for line in lines %}
+      <tr>
+        <td>{{ line.book.title }}</td>
+        <td class="number">{{ line.quantity }}</td>
+        <td class="number">{{ line.book.price_cents|money }}</td>
+        <td class="number">{{ line.amount_cents|money }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr><td colspan="3" class="number">Total</td><td class="number total">{{ total|money }}</td></tr>
+  </tfoot>
+</table>
+
+<form method="post" class="panel form narrow">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <label>
+    Name
+    {{ form.customer_name }}
+    {{ form.customer_name.errors }}
+  </label>
+  <label>
+    Email
+    {{ form.email }}
+    {{ form.email.errors }}
+  </label>
+  <label>
+    Shipping address
+    {{ form.shipping_address }}
+    {{ form.shipping_address.errors }}
+  </label>
+  <button type="submit" class="button">Place order</button>
+</form>
+{% endblock %}

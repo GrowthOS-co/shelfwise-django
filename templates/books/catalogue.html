@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load shelfwise %}
+
+{% block content %}
+<h1>Catalogue</h1>
+
+<nav class="pills">
+  <a href="{% url 'catalogue' %}" class="pill{% if genre is None %} pill-active{% endif %}">All</a>
+  {% for value in genres %}
+    <a href="{% url 'catalogue' %}?genre={{ value }}"
+       class="pill{% if value == genre %} pill-active{% endif %}">{{ value }}</a>
+  {% endfor %}
+</nav>
+
+<div class="books">
+  {% for book in books %}
+    <div class="card book-card">
+      {% include "books/cover.html" %}
+      <a href="{{ book.get_absolute_url }}" class="link">{{ book.title }}</a>
+      <p class="muted">{{ book.author }}</p>
+      <p class="price">
+        {{ book.price_cents|money }}
+        {% if book.stock == 0 %}<span class="out-of-stock">Out of stock</span>{% endif %}
+      </p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

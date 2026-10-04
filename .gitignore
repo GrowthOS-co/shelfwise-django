@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+/.venv/
+
+# Collected static files
+/staticfiles/
+
+# Local database
+/shelfwise.db*
+
+.DS_Store

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load shelfwise %}
+
+{% block content %}
+<h1>Orders</h1>
+
+{% if orders %}
+  <table>
+    <thead>
+      <tr><th>Order</th><th>Placed</th><th>Customer</th><th class="number">Books</th><th class="number">Total</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td><a href="{{ order.get_absolute_url }}" class="link">{{ order.number }}</a></td>
+          <td>{{ order.created_at|date:"M j, Y" }}</td>
+          <td>{{ order.customer_name }}</td>
+          <td class="number">{{ order.book_count }}</td>
+          <td class="number">{{ order.total|money }}</td>
+          <td>{% include "status_badge.html" with status=order.status %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="muted">No orders yet.</p>
+{% endif %}
+{% endblock %}

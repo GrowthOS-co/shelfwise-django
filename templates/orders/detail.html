@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load shelfwise %}
+
+{% block content %}
+<div class="page-header">
+  <div class="title-row">
+    <h1>{{ order.number }}</h1>
+    {% include "status_badge.html" with status=order.status %}
+  </div>
+  {% if order.status == "placed" %}
+    <form method="post" action="{% url 'order_ship' order.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="button button-shipped">Mark as shipped</button>
+    </form>
+  {% endif %}
+</div>
+
+<dl class="panel facts">
+  <div><dt class="muted">Placed</dt><dd>{{ order.created_at|date:"M j, Y, g:i A" }}</dd></div>
+  {% if order.shipped_at %}
+    <div><dt class="muted">Shipped</dt><dd>{{ order.shipped_at|date:"M j, Y, g:i A" }}</dd></div>
+  {% endif %}
+  <div><dt class="muted">Customer</dt><dd>{{ order.customer_name }}</dd></div>
+  <div><dt class="muted">Email</dt><dd>{{ order.email }}</dd></div>
+  <div><dt class="muted">Ship to</dt><dd class="address">{{ order.shipping_address }}</dd></div>
+</dl>
+
+<table>
+  <thead>
+    <tr><th>Book</th><th class="number">Quantity</th><th class="number">Unit price</th><th class="number">Amount</th></tr>
+  </thead>
+  <tbody>
+    {% for item in order.items.all %}
+      <tr>
+        <td>{{ item.title }}</td>
+        <td class="number">{{ item.quantity }}</td>
+        <td class="number">{{ item.unit_price_cents|money }}</td>
+        <td class="number">{{ item.amount_cents|money }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr><td colspan="3" class="number">Total</td><td class="number total">{{ order.total|money }}</td></tr>
+  </tfoot>
+</table>
+{% endblock %}

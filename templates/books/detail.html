@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load shelfwise %}
+
+{% block title %}{{ book.title }} · Shelfwise{% endblock %}
+
+{% block content %}
+<div class="book-detail">
+  {% include "books/cover.html" %}
+  <div class="book-info">
+    <div>
+      <h1>{{ book.title }}</h1>
+      <p class="muted">by {{ book.author }}</p>
+    </div>
+
+    <dl class="facts">
+      <div><dt class="muted">Genre</dt><dd>{{ book.genre }}</dd></div>
+      <div><dt class="muted">Published</dt><dd>{{ book.published_year }}</dd></div>
+      <div><dt class="muted">ISBN</dt><dd>{{ book.isbn }}</dd></div>
+    </dl>
+
+    <p>{{ book.description }}</p>
+
+    <p class="card-value">{{ book.price_cents|money }}</p>
+
+    {% if book.stock > 0 %}
+      <p class="muted">{{ book.stock }} in stock</p>
+      <form method="post" action="{% url 'cart_add' book.pk %}" class="add-to-cart">
+        {% csrf_token %}
+        <label>
+          Quantity
+          {{ form.quantity }}
+        </label>
+        <button type="submit" class="button">Add to cart</button>
+      </form>
+    {% else %}
+      <p class="out-of-stock">Out of stock</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

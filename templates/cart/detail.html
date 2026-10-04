@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load shelfwise %}
+
+{% block content %}
+<h1>Cart</h1>
+
+{% if rows %}
+  <table>
+    <thead>
+      <tr><th>Book</th><th class="number">Price</th><th class="number">Quantity</th><th></th><th class="number">Amount</th></tr>
+    </thead>
+    <tbody>
+      {% for line, form in rows %}
+        <tr>
+          <td><a href="{{ line.book.get_absolute_url }}" class="link">{{ line.book.title }}</a></td>
+          <td class="number">{{ line.book.price_cents|money }}</td>
+          <td class="number">
+            <form method="post" action="{% url 'cart_update' line.book.pk %}" class="quantity-form">
+              {% csrf_token %}
+              {{ form.quantity }}
+              <button type="submit" class="button button-secondary">Update</button>
+            </form>
+          </td>
+          <td>
+            <form method="post" action="{% url 'cart_remove' line.book.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="link-button">Remove</button>
+            </form>
+          </td>
+          <td class="number">{{ line.amount_cents|money }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr><td colspan="4" class="number">Total</td><td class="number total">{{ total|money }}</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="actions end">
+    <a href="{% url 'checkout' %}" class="button">Checkout</a>
+  </div>
+{% else %}
+  <p class="muted">Your cart is empty. <a href="{% url 'catalogue' %}" class="link">Browse the catalogue</a></p>
+{% endif %}
+{% endblock %}

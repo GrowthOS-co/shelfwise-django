@@ -1,0 +1,26 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Shelfwise{% endblock %}</title>
+  <meta name="description" content="An independent bookshop">
+  <link rel="stylesheet" href="{% static 'shelfwise.css' %}">
+</head>
+<body>
+  <header class="topbar">
+    <nav>
+      <a href="{% url 'catalogue' %}" class="brand">Shelfwise</a>
+      <a href="{% url 'catalogue' %}">Catalogue</a>
+      <a href="{% url 'order_list' %}">Orders</a>
+      <a href="{% url 'cart' %}">Cart ({{ cart_count }})</a>
+    </nav>
+  </header>
+  <main>
+    {% for message in messages %}
+      <p class="alert">{{ message }}</p>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
